@@ -65,11 +65,6 @@ router.get('/:customerId', async (req, res)=>{
 
 
 
-
-
-    
-
-
 });
 
 module.exports = router;

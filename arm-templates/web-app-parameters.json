@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "value": "restaurantsMap"
+    },
+    "appServicePlanName": {
+      "value": "restaurantsMap-20190914004548"
+    },
+    "sku": {
+      "value": "B1"
+    },
+    "linuxFxVersion": {
+      "value": "node|10.14"
+    },
+    "subscriptionId": {
+      "value": "079cb5aa-d0d3-42b0-b331-d2ddc88f4608"
+    },
+    "location": {
+      "value": "Central US"
+    }
+  }
+}

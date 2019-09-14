@@ -9,14 +9,16 @@ import { ListModule } from './app-shell/list/list.module';
 import { GridModule } from './app-shell/grid/grid.module';
 import { HomeModule } from './app-shell/home/home.module';
 import { NavBarComponent } from './app-shell/nav-bar/nav-bar.component';
-import { FooterComponent } from './app-shell/footer/footer.component';
+import { FooterComponent } from './app-shell/footer/footer.component';;
+import { MapComponent } from './map/map.component'
 
 @NgModule({
   declarations: [
     AppComponent,
     NavBarComponent,
     FooterComponent
-  ],
+,
+    MapComponent  ],
   imports: [
     BrowserModule,
     HttpClientModule,

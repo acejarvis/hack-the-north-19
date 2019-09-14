@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { mapToMapExpression } from '@angular/compiler/src/render3/util';
 
 const routes: Routes = [
   { path: '',   redirectTo: '/home', pathMatch: 'full' },
@@ -19,6 +20,10 @@ const routes: Routes = [
     path: 'master-detail',
     loadChildren: () => import('./app-shell/master-detail/master-detail.module').then(mod => mod.MasterDetailModule)
   },
+  {
+    path: 'map',
+    loadChildren: () => import('./map/map.component')
+  }
 ];
 
 @NgModule({

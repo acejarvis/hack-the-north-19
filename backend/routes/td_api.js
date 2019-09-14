@@ -23,35 +23,36 @@ function options(method, uri, body = null) {
 
 
 (async () => {
-  await req(options('GET', 'customers/' + initialCustomerId))
-    .then((resp) => {
-      const cust = resp.result;
-      console.log("\nCustomer\n- Name: " + cust.givenName + " " + cust.surname);
-      console.log("- Address: " + util.inspect(cust.addresses.principalResidence));
-    }, handleError)
+//   await req(options('GET', 'customers/' + initialCustomerId))
+//     .then((resp) => {
+//       const cust = resp.result;
+//       console.log("\nCustomer\n- Name: " + cust.givenName + " " + cust.surname);
+//       console.log("- Address: " + util.inspect(cust.addresses.principalResidence));
+//     }, handleError)
 
+//getting customer initialid
   const [creditCardId, bankAccountId] = await req(options('GET', 'customers/' + initialCustomerId + '/accounts'))
     .then((resp) => {
       return [resp.result.creditCardAccounts[0].id, resp.result.bankAccounts[0].id];
     }, handleError)
 
-  await req(options('GET', 'accounts/' + creditCardId))
-    .then((resp) => {
-      const cc = resp.result.creditCardAccount;
-      console.log("\nCredit Card\n- Number: " + cc.maskedNumber);
-      console.log("- Balance: " + cc.balance);
-    }, handleError)
+//   await req(options('GET', 'accounts/' + creditCardId))
+//     .then((resp) => {
+//       const cc = resp.result.creditCardAccount;
+//       console.log("\nCredit Card\n- Number: " + cc.maskedNumber);
+//       console.log("- Balance: " + cc.balance);
+//     }, handleError)
 
-  await req(options('GET', 'accounts/' + bankAccountId))
-    .then((resp) => {
-      const acct = resp.result.bankAccount;
-      console.log("\nBank Account\n- Number: " + acct.maskedAccountNumber);
-      console.log("- Balance: " + acct.balance);
-    }, handleError)
+//   await req(options('GET', 'accounts/' + bankAccountId))
+//     .then((resp) => {
+//       const acct = resp.result.bankAccount;
+//       console.log("\nBank Account\n- Number: " + acct.maskedAccountNumber);
+//       console.log("- Balance: " + acct.balance);
+//     }, handleError)
 
 
  //getting the entire transaction of the customer   
-  const tranId = await req(options('GET', 'accounts/' + creditCardId + "/transactions"))
+  const tranId = await req(options('GET', 'customers/' + initialCustomerId + "/transactions"))
     .then((resp) => {
     
       var x = [];  

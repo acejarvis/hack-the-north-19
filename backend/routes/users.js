@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const request = require('request-promise-native'); // use Request library + promises to reduce lines of code
-
 const apiKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJDQlAiLCJ0ZWFtX2lkIjoiNjU0MWQyNjQtMTgwZS0zNTVkLTg2ZmUtMGJiNjNmYmRmMmRiIiwiZXhwIjo5MjIzMzcyMDM2ODU0Nzc1LCJhcHBfaWQiOiIyODA5YmQzMC03N2I5LTQ4ZTItYjVmYy1lZjQ2NTgxMmQ4YjIifQ.syA-Drtn7SFiiZJv_apCF7hIMMjqYVMH5yID449JLws";
+router.use(express.urlencoded());
 //const initialCustomerId = "cad31095-cae1-49f4-bea8-78c42e2d92b7";
 
 function handleError(err) {
@@ -28,6 +28,8 @@ function options(method, uri, body = null) {
       headers: { 'Authorization': apiKey }
     };
   }
+
+
 
 
 
@@ -66,5 +68,11 @@ router.get('/:customerId', async (req, res)=>{
 
 
 });
+
+// x-form-data loading
+router.post("/" , function (req, res) {
+  console.log(req.body.asdf);
+});
+
 
 module.exports = router;

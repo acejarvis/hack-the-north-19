@@ -107,10 +107,104 @@ router.get('/:customerId', async (req, res)=>{
 
 });
 
+
+
+
 // x-form-data loadingasdf
-router.post("/" , function (req, res) {
-  console.log(req.body.asdf);
+router.post("/" , async (req, res)=>{
+  //getting the date and customer ID 
+  console.log(req.body.date);
+  const date = req.body.date;
+  const id = req.body.customerId;
+  
+
+  //getting the customer data from api
+  const filterArray = await request(options('GET', 'customers/' + id + "/transactions"))
+  .then((resp) => {
+  
+    var x = [];  
+    //console.log("asdfasfs " + resp.result[0].id);
+    var hashTable = new simpleHashTable();
+    //getting a bunch of tranid
+    for(var i = 0; i < resp.result.length;i++){
+     let tmpLocation = {
+       "longitude": resp.result[i].locationLongitude,
+       "latitude": resp.result[i].locationLatitude
+     };
+     //var testdate = new Date(resp.result[i].originationDateTime);
+     
+
+     if(hashTable.get(JSON.stringify(tmpLocation)) === -1){
+       //new location
+       //console.log("adding new location..");
+       hashTable.put(JSON.stringify(tmpLocation), {
+         "count": 1,
+         "expense": Math.abs(resp.result[i].currencyAmount),
+         "time": resp.result[i].originationDateTime
+       });
+     }else{
+       //same location already exists in hash table
+       let tmp = hashTable.get(JSON.stringify(tmpLocation));
+       tmp.count = tmp.count +1;
+       tmp.expense = tmp.expense + Math.abs(resp.result[i].currencyAmount);
+       //console.log("test");
+       console.log(JSON.stringify(tmp));
+     }
+     
+ 
+    }
+    console.log("print hash keys: ");
+    let keys = hashTable.keys();
+    console.log(hashTable.keys());
+    console.log("print hash table: ");
+    for (var j = 0; j < keys.length;j++){
+     if(hashTable.containsKey(keys[j]) && JSON.parse(keys[j]).longitude){
+        var value = hashTable.get(keys[j]);
+
+        
+        //comparing the time: extract the date and convert it to a number for comparison
+        var current_time_value = value.time;
+        var ctv = new Date(current_time_value);
+        var senddate = new Date(date);
+      
+        if(ctv.getTime() >= senddate.getTime()){
+
+        }else{
+
+          continue;
+        } 
+
+
+     }
+     else{
+       continue;
+     }
+
+     //generating the json object 
+     let obj = {
+       "longitude": JSON.parse(keys[j]).longitude,
+       "latitude": JSON.parse(keys[j]).latitude,
+       "count": value.count,
+       "expense": value.expense,
+       "time": value.time 
+     };
+     x.push(obj);
+   }
+    console.log(x);
+     //response is here 
+    return x;
+ 
+  }, handleError);
+
+
+  
+
+  //
+
+
 });
+
+
 
 
 module.exports = router;

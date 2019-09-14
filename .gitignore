@@ -28,4 +28,6 @@ yarn-error.log*
 
 
 # dependencies
-/node_modules
+/backend/node_modules
+/backend/demo.js
+/backend/key

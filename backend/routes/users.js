@@ -46,16 +46,17 @@ router.get('/:customerId', async (req, res)=>{
     .then((resp) => {
     
       var x = [];  
-      console.log("asdfasfs " + resp.result[0].id);
-      let hashTable = new simpleHashTable();
+      //console.log("asdfasfs " + resp.result[0].id);
+      var hashTable = new simpleHashTable();
       //getting a bunch of tranid
       for(var i = 0; i < resp.result.length;i++){
        let tmpLocation = {
          "longitude": resp.result[i].locationLongitude,
          "latitude": resp.result[i].locationLatitude
        };
-       if(hashTable.get(tmpLocation) === -1){
+       if(hashTable.get(JSON.stringify(tmpLocation)) === -1){
          //new location
+         //console.log("adding new location..");
          hashTable.put(JSON.stringify(tmpLocation), {
            "count": 1,
            "expense": Math.abs(resp.result[i].currencyAmount)
@@ -65,13 +66,31 @@ router.get('/:customerId', async (req, res)=>{
          let tmp = hashTable.get(JSON.stringify(tmpLocation));
          tmp.count = tmp.count +1;
          tmp.expense = tmp.expense + Math.abs(resp.result[i].currencyAmount);
+         //console.log("test");
          console.log(JSON.stringify(tmp));
        }
-
-      //  x.push(tmpLocation);
-        
-      }
+       
    
+      }
+      console.log("print hash keys: ");
+      let keys = hashTable.keys();
+      console.log(hashTable.keys());
+      console.log("print hash table: ");
+      for (var j = 0; j < keys.length;j++){
+       if(hashTable.containsKey(keys[j]) && JSON.parse(keys[j]).longitude){
+          var value = hashTable.get(keys[j]);
+       }
+       else{
+         continue;
+       }
+       let obj = {
+         "longitude": JSON.parse(keys[j]).longitude,
+         "latitude": JSON.parse(keys[j]).latitude,
+         "count": value.count,
+         "expense": value.expense
+       };
+       x.push(obj);
+     }
       console.log(x);
        //response is here 
       return x;

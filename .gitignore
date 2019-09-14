@@ -30,3 +30,4 @@ yarn-error.log*
 # dependencies
 /backend/node_modules
 /backend/demo.js
+/backend/key

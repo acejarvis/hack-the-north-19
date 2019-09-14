@@ -113,10 +113,15 @@ router.get('/:customerId', async (req, res)=>{
 // x-form-data loadingasdf
 router.post("/" , async (req, res)=>{
   //getting the date and customer ID 
-  console.log(req.body.date);
+  //console.log(req.body.date);
   const date = req.body.date;
   const id = req.body.customerId;
   
+  if(!id || !date){
+	  
+	  res.send("please enter information");
+	  return;
+  }
 
   //getting the customer data from api
   const filterArray = await request(options('GET', 'customers/' + id + "/transactions"))
@@ -148,15 +153,15 @@ router.post("/" , async (req, res)=>{
        tmp.count = tmp.count +1;
        tmp.expense = tmp.expense + Math.abs(resp.result[i].currencyAmount);
        //console.log("test");
-       console.log(JSON.stringify(tmp));
+       //console.log(JSON.stringify(tmp));
      }
      
  
     }
-    console.log("print hash keys: ");
+    //console.log("print hash keys: ");
     let keys = hashTable.keys();
-    console.log(hashTable.keys());
-    console.log("print hash table: ");
+    //console.log(hashTable.keys());
+    //console.log("print hash table: ");
     for (var j = 0; j < keys.length;j++){
      if(hashTable.containsKey(keys[j]) && JSON.parse(keys[j]).longitude){
         var value = hashTable.get(keys[j]);
@@ -190,9 +195,9 @@ router.post("/" , async (req, res)=>{
      };
      x.push(obj);
    }
-    console.log(x);
+    //console.log(x);
      //response is here 
-    return x;
+    res.send(x);
  
   }, handleError);
 

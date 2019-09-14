@@ -52,22 +52,26 @@ function options(method, uri, body = null) {
 
 
  //getting the entire transaction of the customer   
-  const tranId = await req(options('GET', 'customers/' + initialCustomerId + "/transactions"))
-    .then((resp) => {
-    
-      var x = [];  
-      console.log("asdfasfs " + resp.result[0].id);
-      
-      //getting a bunch of tranid
-      for(var i = 0; i < resp.result.length;i++){
-        x.push(resp.result[i].id);
-      }
+ const tranId = await req(options('GET', 'customers/' + initialCustomerId + "/transactions"))
+ .then((resp) => {
+ 
+   var x = [];  
+   console.log("asdfasfs " + resp.result[0].id);
+   
+   //getting a bunch of tranid
+   for(var i = 0; i < resp.result.length;i++){
+    let tmpLocation = {
+      "longitude": resp.result[i].locationLongitude,
+      "latitude": resp.result[i].locationLatitude
+    };
+    x.push(tmpLocation);
+   }
 
-      console.log(x);
-       //response is here 
-      return x;
+   console.log(x);
+    //response is here 
+   return x;
 
-    }, handleError)
+ }, handleError)
 
   await req(options('GET', 'transactions/' + tranId))
     .then((resp) => {

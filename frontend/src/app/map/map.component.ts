@@ -2,7 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { MapService } from './map.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
+function hello(){
 
+alert("Hello!!!");
+
+}
 
 @Component({
   selector: 'app-map',
@@ -10,6 +14,23 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit {
+
+  ngOnInit() {
+    this.mapService.getHeatPoints().subscribe(result => {
+      console.log(result);
+      console.log(result[0].latitude);
+      this.markers = result[0].latitude, result[0].longitude;
+      console.log(this.markers);
+    });
+    this.mapService.getCurrentPosition().subscribe(result => {
+      console.log(result);
+      this.map.lat = result.coords.latitude;
+      this.map.lng = result.coords.longitude;
+    });
+
+    hello();
+    
+  }
 
   closeResult: string;
 
@@ -51,20 +72,12 @@ export class MapComponent implements OnInit {
     }
 
 
-  public map: any = { lat: 0.000, lng: 0.000 };
+  public map: any = { };
+
+   markers: any[];
 
 
-  ngOnInit() {
-    this.mapService.getHeatPoints().subscribe(result => {
-      console.log(result);
-    });
-    this.mapService.getCurrentPosition().subscribe(result => {
-      console.log(result);
-      this.map.lat = result.coords.latitude;
-      this.map.lng = result.coords.longitude;
-    });
+  
 
-    
-  }
 
 }

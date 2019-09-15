@@ -8,22 +8,9 @@ const bcrypt = require('bcrypt');
 //     credentail: admin.credential.applicationDefault(),
 //     detabaseURL: 'https://try1-233916.firebaseio.com/'
 // });
-const firebaseConfig = {
-    apiKey: "AIzaSyCe82sDO_NfxwEuhAJczmUyOIZHHZHUcLA",
-    authDomain: "try1-233916.firebaseapp.com",
-    databaseURL: "https://try1-233916.firebaseio.com",
-    projectId: "try1-233916",
-    storageBucket: "try1-233916.appspot.com",
-    messagingSenderId: "579778072724",
-    appId: "1:579778072724:web:9226f7380292dbd3f96481"
-  };
   
   // admin.initializeApp(firebaseConfig);
-  var serviceAccount = require("../key/secret.json");
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://try1-233916.firebaseio.com"
-  });
+
 
 //NOT FINISHED
 router.post('/', async (req, res) =>{
@@ -54,6 +41,7 @@ router.post('/', async (req, res) =>{
     console.log("The read failed: " + errorObject.code);
     return res.status(400).send('Invalid input or server err');
     });
+    db.goOffline();//close db connection
     const token = jwt.sign({ email: req.body.userName}, "somePrivateKey");
     return res.header('x-auth-token', token).send(req.body.userName);
     //await sleep(2000);

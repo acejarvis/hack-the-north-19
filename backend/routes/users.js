@@ -10,12 +10,16 @@ const apiKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJDQlAiLCJ0ZWFtX2l
 router.use(express.urlencoded());
 //const initialCustomerId = "cad31095-cae1-49f4-bea8-78c42e2d92b7";
 
-let serviceAccount = require('../key/secret.json');
+//let serviceAccount = require('../key/secret.json');
 // admin.initializeApp({
 //   credentail: admin.credential.cert(serviceAccount),
 //   detabaseURL: 'https://try1-233916.firebaseio.com/'
 // });
-
+var serviceAccount = require("../key/secret.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://try1-233916.firebaseio.com"
+});
 
 
 
@@ -212,13 +216,30 @@ router.post("/" , async (req, res)=>{
  
   }, handleError);
 
-
-  
-
-  //
-
-
 });
+
+
+//request body should have a restaurant name property
+router.post('/graph', (req, res)=>{
+  const {error} = validateName(req.body);
+  if(error){
+    return res.status(400).send(error.details[0].message);
+  }
+
+
+  console.log("firebase connected..");
+  var db = admin.database();
+  var ref = db.ref("datapoint/"+req.body.name);
+  return ref.on("value", (snapshot)=>{
+    console.log(snapshot.val());
+    return res.status(200).send(snapshot.val());
+    
+  }, (errorObject) => {
+    console.log("The read failed: " + errorObject.code);
+    return res.status(400).send('Invalid input or server err');
+    });
+})
+
 
 //add a new user
 //request body should have userName, customer ID and password
@@ -228,22 +249,9 @@ router.post('/add', (req, res)=>{
     if(error){
       return res.status(400).send(error.details[0].message);
     }
-    const firebaseConfig = {
-      apiKey: "AIzaSyCe82sDO_NfxwEuhAJczmUyOIZHHZHUcLA",
-      authDomain: "try1-233916.firebaseapp.com",
-      databaseURL: "https://try1-233916.firebaseio.com",
-      projectId: "try1-233916",
-      storageBucket: "try1-233916.appspot.com",
-      messagingSenderId: "579778072724",
-      appId: "1:579778072724:web:9226f7380292dbd3f96481"
-    };
     
     // admin.initializeApp(firebaseConfig);
-    var serviceAccount = require("../key/secret.json");
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-      databaseURL: "https://try1-233916.firebaseio.com"
-    });
+
     var db = admin.database();
     var ref = db.ref("server");
 
@@ -270,4 +278,11 @@ function validateNewUser(user){
   return Joi.validate(user, schema);
 }
 
+function validateName(tmp){
+  const schema = Joi.object({
+    name: Joi.string().required()
+  });
+
+  return Joi.validate(tmp, schema);
+}
 module.exports = router;

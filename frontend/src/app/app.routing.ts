@@ -7,12 +7,14 @@ import { HomeComponent } from './home/home.component';
 import { SignupComponent } from './signup/signup.component';
 import { LandingComponent } from './landing/landing.component';
 import { MapComponent } from './map/map.component';
+import { EnterpriseComponent } from './enterprise/enterprise.component';
 
 const routes: Routes =[
     { path: 'landing', component: HomeComponent },
     { path: 'register', component: SignupComponent },
     { path: 'home', component: LandingComponent },
     { path: 'map', component: MapComponent},
+    { path: 'enterprise', component: EnterpriseComponent },
     { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 

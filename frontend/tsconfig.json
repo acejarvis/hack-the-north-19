@@ -14,7 +14,7 @@
     "typeRoots": [
       "node_modules/@types"
     ],
-    "types": ["google"],
+    "types": [],
     "lib": [
       "es2017",
       "dom"

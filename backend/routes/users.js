@@ -55,7 +55,14 @@ function options(method, uri, body = null) {
 router.get('/:customerId', async (req, res)=>{
     console.log('Hello world');
     //return res.status(200).send('hi');
-    const id = req.params.customerId;
+
+
+    //get and split the string from get request
+    var get_result = req.params.customerId;
+    var split_result = get_result.split("&");
+    const id = split_result[0];
+    const fil_str = split_result[1];
+    
     if(!id){
         return res.status(400).send("please include customer id");
     }
@@ -71,7 +78,8 @@ router.get('/:customerId', async (req, res)=>{
       for(var i = 0; i < resp.result.length;i++){
        let tmpLocation = {
          "longitude": resp.result[i].locationLongitude,
-         "latitude": resp.result[i].locationLatitude
+         "latitude": resp.result[i].locationLatitude,
+         "Category": resp.result[i].categoryTags
        };
        if(hashTable.get(JSON.stringify(tmpLocation)) === -1){
          //new location
@@ -96,7 +104,9 @@ router.get('/:customerId', async (req, res)=>{
       console.log(hashTable.keys());
       console.log("print hash table: ");
       for (var j = 0; j < keys.length;j++){
-       if(hashTable.containsKey(keys[j]) && JSON.parse(keys[j]).longitude){
+
+        //check empty and compare filter with source str
+       if((hashTable.containsKey(keys[j]) && JSON.parse(keys[j]).longitude) || JSON.parse(keys[j].Category === fil_str)){
           var value = hashTable.get(keys[j]);
        }
        else{
@@ -106,7 +116,8 @@ router.get('/:customerId', async (req, res)=>{
          "longitude": JSON.parse(keys[j]).longitude,
          "latitude": JSON.parse(keys[j]).latitude,
          "count": value.count,
-         "expense": value.expense
+         "expense": value.expense,
+         "Category": JSON.parse(keys[j]).Category
        };
        x.push(obj);
      }
@@ -149,7 +160,8 @@ router.post("/" , async (req, res)=>{
     for(var i = 0; i < resp.result.length;i++){
      let tmpLocation = {
        "longitude": resp.result[i].locationLongitude,
-       "latitude": resp.result[i].locationLatitude
+       "latitude": resp.result[i].locationLatitude,
+       "Category": resp.result[i].categoryTags
      };
      //var testdate = new Date(resp.result[i].originationDateTime);
      
@@ -206,7 +218,8 @@ router.post("/" , async (req, res)=>{
        "latitude": JSON.parse(keys[j]).latitude,
        "count": value.count,
        "expense": value.expense,
-       "time": value.time 
+       "time": value.time,
+       "Category": JSON.parse(keys[j]).Category
      };
      x.push(obj);
    }

@@ -16,6 +16,7 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { HomeModule } from './home/home.module';
 import { MapComponent } from './map/map.component';
 import { HttpClientModule } from '@angular/common/http';
+import { EnterpriseComponent } from './enterprise/enterprise.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { HttpClientModule } from '@angular/common/http';
     LandingComponent,
     NavbarComponent,
     FooterComponent,
-    MapComponent
+    MapComponent,
+    EnterpriseComponent
   ],
   imports: [
     BrowserModule,

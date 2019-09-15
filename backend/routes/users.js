@@ -1,13 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const request = require('request-promise-native'); // use Request library + promises to reduce lines of code
-
+const Joi = require('joi');
 const simpleHashTable = require('simple-hashtable');
-
+const admin = require('firebase-admin');
+const jwt = require('jsonwebtoken');
 
 const apiKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJDQlAiLCJ0ZWFtX2lkIjoiNjU0MWQyNjQtMTgwZS0zNTVkLTg2ZmUtMGJiNjNmYmRmMmRiIiwiZXhwIjo5MjIzMzcyMDM2ODU0Nzc1LCJhcHBfaWQiOiIyODA5YmQzMC03N2I5LTQ4ZTItYjVmYy1lZjQ2NTgxMmQ4YjIifQ.syA-Drtn7SFiiZJv_apCF7hIMMjqYVMH5yID449JLws";
 router.use(express.urlencoded());
 //const initialCustomerId = "cad31095-cae1-49f4-bea8-78c42e2d92b7";
+
+let serviceAccount = require('../key/secret.json');
+// admin.initializeApp({
+//   credentail: admin.credential.cert(serviceAccount),
+//   detabaseURL: 'https://try1-233916.firebaseio.com/'
+// });
+
+
+
+
 
 function handleError(err) {
     let outErr = err;
@@ -56,7 +67,8 @@ router.get('/:customerId', async (req, res)=>{
       for(var i = 0; i < resp.result.length;i++){
        let tmpLocation = {
          "longitude": resp.result[i].locationLongitude,
-         "latitude": resp.result[i].locationLatitude
+         "latitude": resp.result[i].locationLatitude,
+         "Category": resp.result[i].categoryTags
        };
        if(hashTable.get(JSON.stringify(tmpLocation)) === -1){
          //new location
@@ -91,7 +103,8 @@ router.get('/:customerId', async (req, res)=>{
          "longitude": JSON.parse(keys[j]).longitude,
          "latitude": JSON.parse(keys[j]).latitude,
          "count": value.count,
-         "expense": value.expense
+         "expense": value.expense,
+         "Category": JSON.parse(keys[j]).Category
        };
        x.push(obj);
      }
@@ -110,7 +123,7 @@ router.get('/:customerId', async (req, res)=>{
 
 
 
-// x-form-data loadingasdf
+// transactions selected by a given time period for a customer
 router.post("/" , async (req, res)=>{
   //getting the date and customer ID 
   //console.log(req.body.date);
@@ -209,7 +222,54 @@ router.post("/" , async (req, res)=>{
 
 });
 
+//add a new user
+//request body should have userName, customer ID and password
+router.post('/add', (req, res)=>{
+    const {error} = validateNewUser(req.body);
+    console.log(req.body);
+    if(error){
+      return res.status(400).send(error.details[0].message);
+    }
+    const firebaseConfig = {
+      apiKey: "AIzaSyCe82sDO_NfxwEuhAJczmUyOIZHHZHUcLA",
+      authDomain: "try1-233916.firebaseapp.com",
+      databaseURL: "https://try1-233916.firebaseio.com",
+      projectId: "try1-233916",
+      storageBucket: "try1-233916.appspot.com",
+      messagingSenderId: "579778072724",
+      appId: "1:579778072724:web:9226f7380292dbd3f96481"
+    };
+    
+    // admin.initializeApp(firebaseConfig);
+    var serviceAccount = require("../key/secret.json");
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+      databaseURL: "https://try1-233916.firebaseio.com"
+    });
+    var db = admin.database();
+    var ref = db.ref("server");
+
+    //add new user info to db
+    var userRef = ref.child("users").child(req.body.userName);
+    userRef.set({
+      password: req.body.password,
+      customerId: req.body.customerId
+    });
+    const token = jwt.sign({ email: req.body.userName}, "somePrivateKey");
+    res.header('x-auth-token', token).send(req.body.userName);
 
 
+
+
+})
+
+function validateNewUser(user){
+  const schema = Joi.object({
+      userName: Joi.string().min(5).max(255).required(),
+      password: Joi.string().min(5).required(),
+      customerId: Joi.string().required()
+  });
+  return Joi.validate(user, schema);
+}
 
 module.exports = router;

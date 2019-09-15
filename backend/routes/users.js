@@ -15,11 +15,7 @@ router.use(express.urlencoded());
 //   credentail: admin.credential.cert(serviceAccount),
 //   detabaseURL: 'https://try1-233916.firebaseio.com/'
 // });
-var serviceAccount = require("../key/secret.json");
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://try1-233916.firebaseio.com"
-});
+
 
 
 

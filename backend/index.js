@@ -2,11 +2,21 @@ const express = require('express');
 const app = express();
 const users = require('./routes/users');
 const auth = require('./routes/auth');
+const admin = require('firebase-admin');
+
+//db init
+var serviceAccount = require("./key/secret.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://try1-233916.firebaseio.com"
+});
+
 
 //routing
 app.use(express.json());
 app.use('/api/users', users);
 app.use('/api/auth', auth);
+
 
 
 // const http = require('http');

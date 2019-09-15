@@ -67,7 +67,8 @@ router.get('/:customerId', async (req, res)=>{
       for(var i = 0; i < resp.result.length;i++){
        let tmpLocation = {
          "longitude": resp.result[i].locationLongitude,
-         "latitude": resp.result[i].locationLatitude
+         "latitude": resp.result[i].locationLatitude,
+         "Category": resp.result[i].categoryTags
        };
        if(hashTable.get(JSON.stringify(tmpLocation)) === -1){
          //new location
@@ -102,7 +103,8 @@ router.get('/:customerId', async (req, res)=>{
          "longitude": JSON.parse(keys[j]).longitude,
          "latitude": JSON.parse(keys[j]).latitude,
          "count": value.count,
-         "expense": value.expense
+         "expense": value.expense,
+         "Category": JSON.parse(keys[j]).Category
        };
        x.push(obj);
      }

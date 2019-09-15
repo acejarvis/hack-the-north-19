@@ -11,8 +11,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "express": "^4.17.1",
     "firebase-admin": "^8.5.0",
+    "joi": "^14.3.1",
+    "jsonwebtoken": "^8.5.1",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
     "simple-hashtable": "^1.0.0"

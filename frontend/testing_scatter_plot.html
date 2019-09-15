@@ -162,7 +162,7 @@ return final;
         	//ajax portion
     
     function loadMLdata() {
-    var con_site = "http://localhost:3000/api/users/graph";
+    var con_site = "http://lngmgtest.azurewebsites.net/api/users/graph";
     var xhttp = new XMLHttpRequest();
 	var test = [];
 	
@@ -196,9 +196,7 @@ return final;
 		  var x = JSON.parse(intput);
 		  
 		console.log(x);
-		  //var x  = intput;
-		//var parsed = x.split(",");
-		//console.log(parsed);
+
 		  
 function collectTags(list){
     let result = {}
